@@ -106,7 +106,7 @@ class DB
         return $this->pdo->exec($sql);
     }
 
-    public function maht($math,$col,...$arg)
+    public function math($math,$col,...$arg)
     {
         $sql = "SELECT $math($col) FROM `$this->table` ";
 
