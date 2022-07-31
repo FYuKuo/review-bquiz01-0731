@@ -1,6 +1,16 @@
 <?php
+
+use function PHPSTORM_META\elementType;
+
 $do = $_GET['do'] ?? 'main';
 include('./api/base.php');
+
+if (empty($_SESSION['first'])) {
+	$_SESSION['first'] = 1;
+	$total = $Total->find(1);
+	$total['text'] = $total['text'] + 1;
+	$Total->save($total);
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <!-- saved from url=(0040)http://127.0.0.1/test/exercise/collage/? -->
@@ -29,13 +39,39 @@ include('./api/base.php');
 		?>
 		<div id="ms">
 			<div id="lf" style="float:left;">
-				<div id="menuput" class="dbor">
+				<div id="menuput" class="dbor cent">
 					<!--主選單放此-->
 					<span class="t botli">主選單區</span>
+					<?php
+					foreach ($Menu->all(['sh' => 1, 'parent' => 0]) as $key => $menu) {
+					?>
+						<div class="menu_out">
+							<a style="color:#000; font-size:13px; text-decoration:none;" href="<?= $menu['href'] ?>">
+								<div class="mainmu">
+									<?= $menu['text'] ?>
+								</div>
+							</a>
+							<div class="mw">
+								<?php
+								foreach ($Menu->all(['sh' => 1, 'parent' => $menu['id']]) as $key => $child) {
+								?>
+									<a style="color:#000; font-size:13px; text-decoration:none;" href="<?= $child['href'] ?>">
+										<div class="mainmu2">
+											<?= $child['text'] ?>
+										</div>
+									</a>
+								<?php
+								}
+								?>
+							</div>
+						</div>
+					<?php
+					}
+					?>
 				</div>
 				<div class="dbor" style="margin:3px; width:95%; height:20%; line-height:100px;">
 					<span class="t">進站總人數 :
-						1
+						<?= $Total->find(1)['text'] ?>
 					</span>
 				</div>
 			</div>
@@ -48,21 +84,51 @@ include('./api/base.php');
 			?>
 			<div class="di di ad" style="height:540px; width:23%; padding:0px; margin-left:22px; float:left; ">
 				<!--右邊-->
+				<?php
+				if(isset($_SESSION['user'])){
+				?>
+				<button onclick="location.href='./back.php'" style="width:99%; margin-right:2px; height:50px;">
+					後台管理
+				</button>
+				<?php
+				}else{
+				?>
 				<button style="width:100%; margin-left:auto; margin-right:auto; margin-top:2px; height:50px;" onclick="lo('?do=login')">
 					管理登入
 				</button>
+				<?php
+				}
+				?>
 				<div style="width:89%; height:480px;" class="dbor">
 					<span class="t botli">校園映象區</span>
+					<br>
+					<div class="cent">
+						<img src="./icon/up.jpg" onclick="pp(1)">
+					</div>
+					<br>
+					<?php
+					foreach ($Image->all(['sh' => 1]) as $key => $img) {
+					?>
+						<div class="im cent" id="ssaa<?= $key ?>">
+							<img src="./img/<?= $img['img'] ?>" style="width: 150px; height:103px">
+						</div>
+					<?php
+					}
+					?>
+					<br>
+					<div class="cent">
+						<img src="./icon/dn.jpg" onclick="pp(2)">
+					</div>
 					<script>
 						var nowpage = 0,
-							num = 0;
+							num = <?= $Image->math('COUNT', 'id', ['sh' => 1]) ?>;
 
 						function pp(x) {
 							var s, t;
 							if (x == 1 && nowpage - 1 >= 0) {
 								nowpage--;
 							}
-							if (x == 2 && (nowpage + 1) * 3 <= num * 1 + 3) {
+							if (x == 2 && (nowpage + 3) < num) {
 								nowpage++;
 							}
 							$(".im").hide()
@@ -79,10 +145,33 @@ include('./api/base.php');
 		<div style="clear:both;"></div>
 
 		<?php
-			include('./layout/footer.php');
+		include('./layout/footer.php');
 		?>
 	</div>
 
 </body>
+
+<script>
+	$(document).ready(function(e) {
+		$(".mainmu").mouseover(
+			function() {
+				$(this).parent().next().show();
+
+				$(".mw").mouseover(function() {
+					$(this).show();
+				})
+			}
+		)
+		$(".mainmu").mouseout(
+			function() {
+				$(this).parent().next().hide()
+			}
+		)
+
+		$(".mw").mouseout(function() {
+			$(this).hide();
+		})
+	});
+</script>
 
 </html>

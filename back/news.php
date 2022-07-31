@@ -12,7 +12,7 @@
                 <?php
                 $DB = new DB($do);
                 $num = $DB->math('COUNT', 'id');
-                $limit = 3;
+                $limit = 4;
                 $pages = ceil($num / $limit);
                 $page = ($_GET['page']) ?? 1;
                 if ($page <= 0 || $page > $pages) {
