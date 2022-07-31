@@ -248,4 +248,21 @@ function alert($str){
     echo "alert('$str')";
     echo "</script>";
 }
+
+
+
+if(isset($do)){
+    $STR = new STR($do);
+}
+
+
+$Title = new DB('title');
+$Ad = new DB('ad');
+$Mvim = new DB('mvim');
+$Image = new DB('image');
+$Total = new DB('total');
+$Bottom = new DB('bottom');
+$News = new DB('news');
+$Admin = new DB('admin');
+$Menu = new DB('menu');
 ?>
