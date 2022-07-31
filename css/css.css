@@ -168,7 +168,7 @@ input.w-100,.w-100{
 	width: 100%;
 }
 
-input.w-90,.w-90{
+input.w-90,.w-90,textarea.w-90{
 	width: 90%;
 }
 
@@ -179,5 +179,13 @@ input.w-90,.w-90{
 
 .nowPage {
 	font-size: 1.5rem;
+}
+
+.h-50{
+	height: 50px;
+}
+
+.h-70{
+	height: 70px;
 }
 
