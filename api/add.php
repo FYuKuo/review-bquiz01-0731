@@ -5,12 +5,12 @@ $DB = new DB($table);
 
 $data = [];
 
-if(isset($_FILES['img']['tmp_name'])){
+if(!empty($_FILES['img']['tmp_name'])){
     move_uploaded_file($_FILES['img']['tmp_name'],'../img/'.$_FILES['img']['name']);
     $data['img'] = $_FILES['img']['name'];
 }
 
-if(isset($_POST['text'])){
+if(!empty($_POST['text'])){
     $data['text'] = $_POST['text'];
 }
 
@@ -39,7 +39,10 @@ switch ($table) {
         break;
 }
 
-$DB->save($data);
+if(!empty($data)){
+
+    $DB->save($data);
+}
 
 to("../back.php?do=$table");
 ?>
